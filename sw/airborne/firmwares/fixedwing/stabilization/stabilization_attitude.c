@@ -86,12 +86,31 @@ float h_ctl_roll_rate_dgain;
 float h_ctl_course_slew_increment;
 #endif
 
+#ifdef H_CTL_USE_YAW_LOOP
+float h_ctl_yaw_setpoint;
+float h_ctl_yaw_pgain;
+float h_ctl_yaw_dgain;
+pprz_t h_ctl_rudder_setpoint;
+#endif /* H_CTL_USE_YAW_LOOP */
 
 inline static void h_ctl_roll_loop( void );
 inline static void h_ctl_pitch_loop( void );
 #ifdef H_CTL_RATE_LOOP
 static inline void h_ctl_roll_rate_loop( void );
 #endif
+
+#ifdef H_CTL_USE_YAW_LOOP
+inline static void h_ctl_yaw_loop( void );
+
+#ifndef H_CTL_YAW_PGAIN
+#define H_CTL_YAW_PGAIN 0.
+#endif /* H_CTL_YAW_PGAIN */
+
+#ifndef H_CTL_YAW_DGAIN
+#define H_CTL_YAW_DGAIN 0.
+#endif /* H_CTL_YAW_DGAIN */
+
+#endif /* H_CTL_USE_YAW_LOOP */
 
 #ifndef H_CTL_COURSE_PRE_BANK_CORRECTION
 #define H_CTL_COURSE_PRE_BANK_CORRECTION 1.
@@ -167,6 +186,13 @@ void h_ctl_init( void ) {
 #ifdef AGR_CLIMB
 nav_ratio=0;
 #endif
+
+#ifdef H_CTL_USE_YAW_LOOP
+  h_ctl_yaw_setpoint = 0.;
+  h_ctl_yaw_pgain = H_CTL_YAW_PGAIN;
+  h_ctl_yaw_dgain = H_CTL_YAW_DGAIN;
+  h_ctl_rudder_setpoint = 0;
+#endif /* H_CTL_USE_YAW_LOOP */
 }
 
 /**
@@ -306,6 +332,9 @@ void h_ctl_attitude_loop ( void ) {
   if (!h_ctl_disabled) {
     h_ctl_roll_loop();
     h_ctl_pitch_loop();
+	#ifdef H_CTL_USE_YAW_LOOP
+	h_ctl_yaw_loop();
+	#endif /* H_CTL_USE_YAW_LOOP */
   }
 }
 
@@ -450,3 +479,15 @@ inline static void h_ctl_pitch_loop( void ) {
 #endif
   h_ctl_elevator_setpoint = TRIM_PPRZ(cmd);
 }
+
+#ifdef H_CTL_USE_YAW_LOOP
+inline static void h_ctl_yaw_loop( void ) {
+  float err = stateGetNedToBodyEulers_f()->psi - h_ctl_yaw_setpoint;
+  struct FloatRates* body_rate = stateGetBodyRates_f();
+
+  float cmd = h_ctl_yaw_pgain * (err + h_ctl_yaw_dgain * body_rate->r);
+
+  h_ctl_rudder_setpoint = TRIM_PPRZ(cmd);
+}
+#endif /* H_CTL_USE_YAW_LOOP */
+

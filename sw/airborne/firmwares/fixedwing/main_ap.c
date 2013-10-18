@@ -395,6 +395,11 @@ static inline void telecommand_task( void ) {
     /** Pitch is bounded between [-AUTO1_MAX_PITCH;AUTO1_MAX_PITCH] */
     h_ctl_pitch_setpoint = FLOAT_OF_PPRZ(fbw_state->channels[RADIO_PITCH], 0., AUTO1_MAX_PITCH);
   } /** Else asynchronously set by \a h_ctl_course_loop() */
+  
+#ifdef H_CTL_USE_YAW_LOOP
+	/** Yaw is bound between [-AUTO1_MAX_YAW;AUTO1_MAX_YAW] */
+	h_ctl_yaw_setpoint = FLOAT_OF_PPRZ(fbw_state->channels[RADIO_YAW], 0., AUTO1_MAX_YAW);
+#endif /* H_CTL_USE_YAW_LOOP */
 
   /** In AUTO1, throttle comes from RADIO_THROTTLE
       In MANUAL, the value is copied to get it in the telemetry */
@@ -556,6 +561,10 @@ void attitude_loop( void ) {
   ap_state->commands[COMMAND_ROLL] = -h_ctl_aileron_setpoint;
 
   ap_state->commands[COMMAND_PITCH] = h_ctl_elevator_setpoint;
+  
+#ifdef H_CTL_USE_YAW_LOOP
+  ap_state->commands[COMMAND_YAW] = h_ctl_rudder_setpoint;
+#endif /* H_CTL_USE_YAW_LOOP */
 
 #if defined MCU_SPI_LINK || defined MCU_UART_LINK
   link_mcu_send();

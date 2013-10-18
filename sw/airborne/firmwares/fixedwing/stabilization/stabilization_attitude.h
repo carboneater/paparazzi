@@ -98,4 +98,11 @@ extern void h_ctl_attitude_loop ( void );
 extern float h_ctl_roll_attitude_gain;
 extern float h_ctl_roll_rate_gain;
 
+#ifdef H_CTL_USE_YAW_LOOP
+extern float h_ctl_yaw_setpoint;
+extern float h_ctl_yaw_pgain;
+extern float h_ctl_yaw_dgain;
+extern pprz_t h_ctl_rudder_setpoint;
+#endif /* H_CTL_USE_YAW_LOOP */
+
 #endif /* FW_H_CTL_H */
