@@ -48,10 +48,10 @@
 
 	<modules>
 		<load name="sys_mon.xml"/>
-		<load name="baro_bmp.xml">
+		<!--<load name="baro_bmp.xml">
 			<define name="BMP_I2C_DEV" value="i2c2"/>
 			<define name="USE_I2C2"/>
-		</load>
+		</load>-->
 		<!--<load name="servo_switch.xml">
 			<define name="SERVO_SWITCH_ON_VALUE"	value="2000"/>
 			<define name="SERVO_SWITCH_OFF_VALUE"	value="1000"/>
@@ -194,7 +194,7 @@
 		<define name="ROLL_RATE_GAIN" value="1500"/>
 		
 		<!-- Experimental YAW section -->
-		<!--<define name="USE_YAW_LOOP"	value="1"/>-->
+		<define name="USE_YAW_LOOP"	value="1"/>
 		<define name="YAW_PGAIN"	value="12000."/>
 		<define name="YAW_DGAIN"	value="1.5"/>
 	</section>
