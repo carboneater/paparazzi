@@ -96,7 +96,7 @@ pprz_t h_ctl_rudder_setpoint;
 inline static void h_ctl_roll_loop( void );
 inline static void h_ctl_pitch_loop( void );
 #ifdef H_CTL_RATE_LOOP
-static inline void h_ctl_roll_rate_loop( void );
+inline static void h_ctl_roll_rate_loop( void );
 #endif
 
 #ifdef H_CTL_USE_YAW_LOOP
@@ -360,8 +360,7 @@ inline static void h_ctl_roll_loop( void ) {
 /** Computes h_ctl_aileron_setpoint from h_ctl_roll_setpoint */
 inline static void h_ctl_roll_loop( void ) {
   float err = stateGetNedToBodyEulers_f()->phi - h_ctl_roll_setpoint;
-  float cmd = h_ctl_roll_pgain * err
-    + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle;
+  float cmd = h_ctl_roll_pgain * err + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle;
   h_ctl_aileron_setpoint = TRIM_PPRZ(cmd);
 
 #ifdef H_CTL_RATE_LOOP
@@ -375,7 +374,7 @@ inline static void h_ctl_roll_loop( void ) {
 
     float saved_aileron_setpoint = h_ctl_aileron_setpoint;
     h_ctl_roll_rate_loop();
-    h_ctl_aileron_setpoint = Blend(h_ctl_aileron_setpoint, saved_aileron_setpoint, h_ctl_roll_rate_mode) ;
+	h_ctl_aileron_setpoint = Blend(h_ctl_aileron_setpoint, saved_aileron_setpoint, h_ctl_roll_rate_mode) ;
   }
 #endif
 }
@@ -441,7 +440,7 @@ inline static float loiter(void) {
 }
 #endif
 
-#ifdef USE_RATE_LOOP
+#ifdef H_CTL_RATE_LOOP
 inline static void h_ctl_pitch_loop( void ) {
 	struct FloatRates* body_rate = stateGetBodyRates_f();
 	static float last_err = 0;
@@ -490,7 +489,7 @@ inline static void h_ctl_pitch_loop( void ) {
 }
 #endif /* H_CTL_RATE_LOOP */
 
-#ifdef USE_RATE_LOOP
+#ifdef H_CTL_RATE_LOOP
 #ifdef H_CTL_USE_YAW_LOOP
 inline static void h_ctl_yaw_loop( void ) {
 //  float err = stateGetNedToBodyEulers_f()->psi - h_ctl_yaw_setpoint;
@@ -504,4 +503,34 @@ inline static void h_ctl_yaw_loop( void ) {
   h_ctl_rudder_setpoint = TRIM_PPRZ(cmd);
 }
 #endif /* H_CTL_USE_YAW_LOOP */
+
+#ifdef NOT
+static inline void h_ctl_yaw_rate_loop() {
+  float err = stateGetBodyRates_f()->r + h_ctl_yaw_setpoint;
+
+  /* I term calculation */
+  static float yaw_rate_sum_err = 0.;
+  static uint8_t yaw_rate_sum_idx = 0;
+  static float yaw_rate_sum_values[H_CTL_YAW_RATE_SUM_NB_SAMPLES];
+
+  yaw_rate_sum_err -= yaw_rate_sum_values[yaw_rate_sum_idx];
+  yaw_rate_sum_values[yaw_rate_sum_idx] = err;
+  yaw_rate_sum_err += err;
+  yaw_rate_sum_idx++;
+  if (yaw_rate_sum_idx >= H_CTL_YAW_RATE_SUM_NB_SAMPLES) {
+	  yaw_rate_sum_idx = 0;
+  }
+
+  /* D term calculations */
+  static float last_err = 0;
+  float d_err = err - last_err;
+  last_err = err;
+
+  float throttle_dep_pgain = Blend(h_ctl_hi_throttle_yaw_rate_pgain, h_ctl_lo_throttle_yaw_rate_pgain, v_ctl_throttle_setpoint/((float)MAX_PPRZ));
+  float cmd = throttle_dep_pgain * ( err + h_ctl_yaw_rate_igain * yaw_rate_sum_err / H_CTL_ROLL_RATE_SUM_NB_SAMPLES + h_ctl_yaw_rate_dgain * d_err);
+
+  h_ctl_rudder_setpoint = TRIM_PPRZ(cmd);
+}
+#endif
+
 #endif /* H_CTL_RATE_LOOP */

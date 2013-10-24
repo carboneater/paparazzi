@@ -11,7 +11,6 @@
 		<target name="ap"	board="lisa_m_1.0"/>
 		<target name="sim"	board="pc"/>
 
-		<define name="USE_RATE_LOOP"/>
 		<define name="AGR_CLIMB"/>
 		<define name="LOITER_TRIM"/>
 		<define name="ALT_KALMAN"/>
@@ -63,9 +62,9 @@
 	<servos>
 		<servo name="MOTOR"		no="0" min="1290" neutral="1290" max="1810"/>
 		<servo name="ELEVATOR"	no="1" min="1000" neutral="1500" max="2000"/>
-		<servo name="VECTOR1"	no="2" min="2100" neutral="1500" max="900"/> 
-		<servo name="VECTOR2"	no="3" min="2100" neutral="1500" max="900"/> 
-		<servo name="VECTOR3"	no="4" min="2100" neutral="1500" max="900"/> 
+		<servo name="VECTOR1"	no="2" min="2000" neutral="1500" max="1000"/> 
+		<servo name="VECTOR2"	no="3" min="2000" neutral="1500" max="1000"/> 
+		<servo name="VECTOR3"	no="4" min="2000" neutral="1500" max="1000"/> 
 		<servo name="AILERON"		no="5" min="1000" neutral="1500" max="2000"/>
 		<!--<servo name="GEAR"		no="5" min="1000" neutral="1000" max="2000"/> --><!-- Landing Gear Control Signal -->
 	</servos>
@@ -204,6 +203,7 @@
 		<!-- Experimental YAW section -->
 		<define name="USE_YAW_LOOP"	value="1"/>
 		<define name="YAW_PGAIN"	value="12000."/>
+		<define name="YAW_IGAIN"	value="1."/>
 		<define name="YAW_DGAIN"	value="1.5"/>
 	</section>
 
