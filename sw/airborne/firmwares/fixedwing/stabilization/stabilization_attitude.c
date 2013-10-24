@@ -401,8 +401,7 @@ static inline void h_ctl_roll_rate_loop() {
   float d_err = err - last_err;
   last_err = err;
 
-  float throttle_dep_pgain =
-    Blend(h_ctl_hi_throttle_roll_rate_pgain, h_ctl_lo_throttle_roll_rate_pgain, v_ctl_throttle_setpoint/((float)MAX_PPRZ));
+  float throttle_dep_pgain = Blend(h_ctl_hi_throttle_roll_rate_pgain, h_ctl_lo_throttle_roll_rate_pgain, v_ctl_throttle_setpoint/((float)MAX_PPRZ));
   float cmd = throttle_dep_pgain * ( err + h_ctl_roll_rate_igain * roll_rate_sum_err / H_CTL_ROLL_RATE_SUM_NB_SAMPLES + h_ctl_roll_rate_dgain * d_err);
 
   h_ctl_aileron_setpoint = TRIM_PPRZ(cmd);
@@ -442,7 +441,17 @@ inline static float loiter(void) {
 }
 #endif
 
+#ifdef USE_RATE_LOOP
+inline static void h_ctl_pitch_loop( void ) {
+	struct FloatRates* body_rate = stateGetBodyRates_f();
+	static float last_err = 0;
 
+	float err = h_ctl_pitch_setpoint + body_rate->q;
+	float cmd = h_ctl_pitch_pgain * (err + h_ctl_pitch_dgain * (err - last_err));
+	last_err = err;
+	h_ctl_elevator_setpoint = TRIM_PPRZ (cmd);
+}
+#else
 inline static void h_ctl_pitch_loop( void ) {
   static float last_err;
   struct FloatEulers* att = stateGetNedToBodyEulers_f();
@@ -468,7 +477,7 @@ inline static void h_ctl_pitch_loop( void ) {
 	}
 #else //NO_AOA
 	err = att->theta - h_ctl_pitch_loop_setpoint;
-#endif
+#endif /* USE_AOA */
 
 
   float d_err = err - last_err;
@@ -476,18 +485,23 @@ inline static void h_ctl_pitch_loop( void ) {
   float cmd = -h_ctl_pitch_pgain * (err + h_ctl_pitch_dgain * d_err);
 #ifdef LOITER_TRIM
   cmd += loiter();
-#endif
+#endif /* LOITER_TRIM */
   h_ctl_elevator_setpoint = TRIM_PPRZ(cmd);
 }
+#endif /* H_CTL_RATE_LOOP */
 
+#ifdef USE_RATE_LOOP
 #ifdef H_CTL_USE_YAW_LOOP
 inline static void h_ctl_yaw_loop( void ) {
-  float err = stateGetNedToBodyEulers_f()->psi - h_ctl_yaw_setpoint;
+//  float err = stateGetNedToBodyEulers_f()->psi - h_ctl_yaw_setpoint;
   struct FloatRates* body_rate = stateGetBodyRates_f();
+  static float last_err = 0;
 
-  float cmd = h_ctl_yaw_pgain * (err + h_ctl_yaw_dgain * body_rate->r);
+  float err = body_rate->r + h_ctl_yaw_setpoint;
+  float cmd = h_ctl_yaw_pgain * (err + h_ctl_yaw_dgain * (err - last_err));
+  last_err = err;
 
   h_ctl_rudder_setpoint = TRIM_PPRZ(cmd);
 }
 #endif /* H_CTL_USE_YAW_LOOP */
-
+#endif /* H_CTL_RATE_LOOP */

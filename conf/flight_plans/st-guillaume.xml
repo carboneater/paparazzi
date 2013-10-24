@@ -1,0 +1,13 @@
+<!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
+
+<flight_plan security_height="25" alt="430" ground_alt="380" lat0="45.847052" lon0="-72.750630" max_dist_from_home="500" name="St-Guillaume" qfu="270">
+  <waypoints>
+    <waypoint name="HOME" x="53.4" y="14.1"/>
+    <waypoint name="STDBY" x="49.8" y="49.6"/>
+  </waypoints>
+  <blocks>
+    <block name="Standby">
+      <circle radius="75" wp="STDBY"/>
+    </block>
+  </blocks>
+</flight_plan>
