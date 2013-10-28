@@ -141,7 +141,7 @@ void nps_fdm_init(double dt) {
   send_servo_cmd(&crrcsim, zero);
 }
 
-void nps_fdm_run_step(double* commands) {
+void nps_fdm_run_step(double* commands, int commands_nb) {
   // read state
   if (get_msg(&crrcsim, crrcsim.data_buffer) <= 0) {
     return; // nothing on the socket
@@ -459,6 +459,11 @@ void decode_imupacket(struct NpsFdm * fdm, byte* buffer)
       fdm->body_ecef_rotvel.r);
 #endif
 }
+
+// compatibility with OSX
+#ifdef __APPLE__
+#define MSG_NOSIGNAL SO_NOSIGPIPE
+#endif
 
 /***************************************************************************************
  * send servo command over udp
