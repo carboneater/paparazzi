@@ -85,6 +85,8 @@ extern float h_ctl_roll_rate_setpoint_pgain;
 extern float h_ctl_roll_rate_pgain;
 extern float h_ctl_hi_throttle_roll_rate_pgain;
 extern float h_ctl_lo_throttle_roll_rate_pgain;
+extern float h_ctl_hi_throttle_yaw_rate_pgain;
+extern float h_ctl_lo_throttle_yaw_rate_pgain;
 extern float h_ctl_roll_rate_igain;
 extern float h_ctl_roll_rate_dgain;
 
@@ -100,9 +102,18 @@ extern float h_ctl_roll_rate_gain;
 
 #ifdef H_CTL_USE_YAW_LOOP
 extern float h_ctl_yaw_setpoint;
-extern float h_ctl_yaw_pgain;
-extern float h_ctl_yaw_dgain;
+//extern float h_ctl_yaw_pgain;
+//extern float h_ctl_yaw_igain;
+//extern float h_ctl_yaw_dgain;
 extern pprz_t h_ctl_rudder_setpoint;
 #endif /* H_CTL_USE_YAW_LOOP */
+
+#ifdef V_CTL_RATE_LOOP
+extern float v_ctl_hi_throttle_pitch_rate_pgain;
+extern float v_ctl_lo_throttle_pitch_rate_pgain;
+extern float v_ctl_pitch_rate_igain;
+extern float v_ctl_pitch_rate_dgain;
+
+#endif /* V_CTL_RATE_LOOP */
 
 #endif /* FW_H_CTL_H */
