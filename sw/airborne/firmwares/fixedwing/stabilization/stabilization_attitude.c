@@ -383,7 +383,8 @@ inline static void h_ctl_roll_loop( void ) {
 
 static inline void h_ctl_roll_rate_loop() {
 #ifdef H_CTL_ROLL_RATE_LOOP_ONLY
-	float err = stateGetBodyRates_f()->p - h_ctl_roll_setpoint;
+	struct FloatRates* body_rate = stateGetBodyRates_f();
+	float err = body_rate->p - h_ctl_roll_setpoint;
 #else
 	float err = stateGetBodyRates_f()->p - h_ctl_roll_rate_setpoint;
 #endif
@@ -447,7 +448,7 @@ inline static void h_ctl_pitch_loop( void ) {
 	static float last_err = 0.;
 	static uint8_t pitch_sum_idx = 0;
 	
-	float err = h_ctl_pitch_setpoint + body_rate->q;
+	float err = h_ctl_pitch_setpoint - body_rate->q;
 	
 	/* I term calculation */
 	pitch_sum_err -= pitch_sum_values[pitch_sum_idx];
@@ -504,12 +505,12 @@ inline static void h_ctl_pitch_loop( void ) {
 }
 #endif /* H_CTL_RATE_LOOP */
 
-//#ifdef H_CTL_RATE_LOOP
+#ifdef H_CTL_RATE_LOOP
 
 #ifdef H_CTL_USE_YAW_LOOP
 static inline void h_ctl_yaw_loop( void ) {
 	struct FloatRates* body_rate = stateGetBodyRates_f();
-	float err = body_rate->r + h_ctl_yaw_setpoint;
+	float err = h_ctl_yaw_setpoint - body_rate->r;
   /* I term calculation */
   static float yaw_rate_sum_err = 0.;
   static uint8_t yaw_rate_sum_idx = 0;
@@ -535,4 +536,4 @@ static inline void h_ctl_yaw_loop( void ) {
 }
 #endif /* H_CTL_USE_YAW_LOOP */
 
-//#endif /* H_CTL_RATE_LOOP */
+#endif /* H_CTL_RATE_LOOP */

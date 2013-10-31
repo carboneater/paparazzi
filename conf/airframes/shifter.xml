@@ -184,12 +184,12 @@
 		<define name="PITCH_MAX_SETPOINT"		value="30"	unit="deg"/>
 		<define name="PITCH_MIN_SETPOINT"		value="-30"	unit="deg"/>
 
-		<define name="HI_THROTTLE_PITCH_PGAIN"	value="6000."/>
-		<define name="LO_THROTTLE_PITCH_PGAIN"	value="12000."/>
+		<define name="HI_THROTTLE_PITCH_PGAIN"	value="3000."/>
+		<define name="LO_THROTTLE_PITCH_PGAIN"	value="6000."/>
 		<define name="PITCH_PGAIN"				value="12000."/>
 		<define name="PITCH_DGAIN"				value="1.5"/>
 		<define name="PITCH_IGAIN"				value="1."/>
-		<define name="PITCH_SUM_NB_SAMPLES"		value="64"/>
+		<define name="PITCH_SUM_NB_SAMPLES"		value="4"/>
 
 		<define name="ELEVATOR_OF_ROLL" value="1250"/>
 
@@ -197,14 +197,15 @@
 
 		<!--define name="ROLL_ATTITUDE_GAIN"			value="1"/--><!--15000/-->
 		<!--define name="ROLL_RATE_GAIN"				value="0"/--><!--1500/-->
-		<define name="HI_THROTTLE_ROLL_RATE_PGAIN"	value="2500"/><!--2500/-->
-		<define name="LO_THROTTLE_ROLL_RATE_PGAIN"	value="7500"/><!--7500/-->
+		<define name="HI_THROTTLE_ROLL_RATE_PGAIN"	value="3000"/><!--2500/-->
+		<define name="LO_THROTTLE_ROLL_RATE_PGAIN"	value="6000"/><!--7500/-->
 		<define name="ROLL_RATE_IGAIN"				value="1"/>
 		<define name="ROLL_RATE_DGAIN"				value="1.5"/><!--1.5/-->
 		<define name="ROLL_RATE_MAX_SETPOINT"		value="9600"/>
 		<define name="ROLL_RATE_MODE_DEFAULT"		value="0"/>
+		<define name="ROLL_RATE_LOOP_ONLY"			value="1"/>
 		<define name="ROLL_RATE_SETPOINT_PGAIN"		value="0"/>
-		<define name="ROLL_RATE_SUM_NB_SAMPLES"		value="64"/>
+		<define name="ROLL_RATE_SUM_NB_SAMPLES"		value="4"/>
 		
 		<!-- Experimental YAW section -->
 		<define name="HI_THROTTLE_YAW_PGAIN"	value="6000."/>
@@ -213,7 +214,7 @@
 		<define name="YAW_PGAIN"				value="12000."/>
 		<define name="YAW_IGAIN"				value="1."/>
 		<define name="YAW_DGAIN"				value="1.5"/>
-		<define name="YAW_RATE_SUM_NB_SAMPLES"	value="64" />
+		<define name="YAW_RATE_SUM_NB_SAMPLES"	value="4" />
 	</section>
 
 	<section name="AGGRESSIVE" prefix="AGR_">
