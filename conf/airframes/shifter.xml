@@ -15,7 +15,7 @@
 		<define name="LOITER_TRIM"/>
 		<define name="ALT_KALMAN"/>
 		<define name="USE_BARO_BMP"/>
-		<configure name="RADIO_CONTROL_NB_CHANNEL" value="6"/>
+		<configure name="RADIO_CONTROL_NB_CHANNEL" value="5"/>
 
 <!--
 		<subsystem name="radio_control" type="datalink"/>
@@ -23,6 +23,7 @@
 		<subsystem name="radio_control" type="spektrum">
 			<configure name="USE_SECONDARY_SPEKTRUM_RECEIVER" value="1"/>
 			<!--<define name="RADIO_GEAR" value="RADIO_GEAR"/>-->
+			<!--<define name="RADIO_AUX1" value="RADIO_AUX1"/>-->
 			<define name="RADIO_MODE" value="RADIO_AUX1"/>
 		</subsystem>
 
@@ -60,12 +61,12 @@
 	</modules>
 
 	<servos>
-		<servo name="MOTOR"		no="0" min="1290" neutral="1290" max="1810"/>
+		<servo name="MOTOR"		no="0" min="1000" neutral="1000" max="2000"/>
 		<servo name="ELEVATOR"	no="1" min="1000" neutral="1500" max="2000"/>
 		<servo name="VECTOR1"	no="2" min="2000" neutral="1500" max="1000"/> 
 		<servo name="VECTOR2"	no="3" min="2000" neutral="1500" max="1000"/> 
-		<servo name="VECTOR3"	no="4" min="2000" neutral="1500" max="1000"/> 
-		<servo name="AILERON"		no="5" min="1000" neutral="1500" max="2000"/>
+		<servo name="VECTOR3"	no="4" min="1000" neutral="1500" max="2000"/> 
+		<servo name="AILERON"	no="5" min="1000" neutral="1500" max="2000"/>
 		<!--<servo name="GEAR"		no="5" min="1000" neutral="1000" max="2000"/> --><!-- Landing Gear Control Signal -->
 	</servos>
 
@@ -75,6 +76,7 @@
 		<axis name="PITCH"		failsafe_value="0"/>
 		<axis name="YAW"		failsafe_value="0"/>
 		<axis name="GEAR"		failsafe_value="0"/>
+		<axis name="AUX1"		failsafe_value="0"/>
 	</commands>
 
 	<rc_commands>
@@ -83,10 +85,12 @@
 		<set command="PITCH"	value="@PITCH"/>
 		<set command="YAW"		value="@YAW"/>
 		<set command="GEAR"		value="@GEAR"/>
+		<set command="AUX1"		value="@AUX1"/>
 	</rc_commands>
 	
 	<auto_rc_commands>
 		<set command="GEAR"		value="@GEAR"/>
+		<set command="AUX1"		value="@AUX1"/>
 	</auto_rc_commands>
 
 	<section name="MIXER">
@@ -101,9 +105,9 @@
 		<set servo="VECTOR3"	value="@YAW"/>
 		<set servo="VECTOR2"	value="$aileron + $elevator"/>
         <set servo="VECTOR1"	value="$aileron - $elevator"/>
-        <set servo="AILERON"	value="@ROLL*1"/>
+        <set servo="AILERON"	value="@ROLL*.5"/>
         <set servo="ELEVATOR"	value="@PITCH*.5"/>
-        <!--<set servo="GEAR"		value="@GEAR"/>-->
+		<!--<set servo="GEAR"		value="@GEAR"/>-->
 	</command_laws>
 
 	<section name="IMU" prefix="IMU_">
@@ -208,8 +212,8 @@
 		<define name="ROLL_RATE_SUM_NB_SAMPLES"		value="4"/>
 		
 		<!-- Experimental YAW section -->
-		<define name="HI_THROTTLE_YAW_PGAIN"	value="6000."/>
-		<define name="LO_THROTTLE_YAW_PGAIN"	value="12000."/>
+		<define name="HI_THROTTLE_YAW_PGAIN"	value="3000."/>
+		<define name="LO_THROTTLE_YAW_PGAIN"	value="6000."/>
 		<define name="USE_YAW_LOOP"				value="1"/>
 		<define name="YAW_PGAIN"				value="12000."/>
 		<define name="YAW_IGAIN"				value="1."/>
@@ -243,10 +247,10 @@
 
 	<section name="BAT">
 		<define name="MILLIAMP_AT_FULL_THROTTLE" value="2000"/>
-		<define name="CATASTROPHIC_BAT_LEVEL" value="4.3" unit="V"/>
-		<define name="CRITIC_BAT_LEVEL" value="4.6" unit="V"/>
-		<define name="LOW_BAT_LEVEL" value="4.7" unit="V"/>
-		<define name="MAX_BAT_LEVEL" value="12.4" unit="V"/>
+		<define name="CATASTROPHIC_BAT_LEVEL" value="6" unit="V"/>
+		<define name="CRITIC_BAT_LEVEL" value="6.2" unit="V"/>
+		<define name="LOW_BAT_LEVEL" value="6.4" unit="V"/>
+		<define name="MAX_BAT_LEVEL" value="8.5" unit="V"/>
 	</section>
 
 	<section name="MISC">
