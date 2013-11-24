@@ -105,15 +105,15 @@
 		<set servo="VECTOR3"	value="@YAW"/>
 		<set servo="VECTOR2"	value="$aileron + $elevator"/>
         <set servo="VECTOR1"	value="$aileron - $elevator"/>
-        <set servo="AILERON"	value="@ROLL*.5"/>
-        <set servo="ELEVATOR"	value="@PITCH*.5"/>
+        <set servo="AILERON"	value="@ROLL"/>
+        <set servo="ELEVATOR"	value="@PITCH"/>
 		<!--<set servo="GEAR"		value="@GEAR"/>-->
 	</command_laws>
 
 	<section name="IMU" prefix="IMU_">
-		<define name="BODY_TO_IMU_PHI"		value="00.0" unit="deg"/>
-		<define name="BODY_TO_IMU_THETA"	value="00.0" unit="deg"/>
-		<define name="BODY_TO_IMU_PSI"		value="270.0" unit="deg"/>
+		<define name="BODY_TO_IMU_PHI"		value="180.0" unit="deg"/>
+		<define name="BODY_TO_IMU_THETA"	value="180.0" unit="deg"/>
+		<define name="BODY_TO_IMU_PSI"		value="180.0" unit="deg"/>
 
 		<define name="GYRO_P_NEUTRAL" value="7"/>
 		<define name="GYRO_Q_NEUTRAL" value="-38"/>
