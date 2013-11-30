@@ -15,7 +15,6 @@
 		<define name="LOITER_TRIM"/>
 		<define name="ALT_KALMAN"/>
 		<define name="USE_BARO_BMP"/>
-		<configure name="RADIO_CONTROL_NB_CHANNEL" value="5"/>
 
 		<subsystem name="radio_control" type="datalink"/>
 <!--		<subsystem name="radio_control" type="spektrum">
@@ -51,21 +50,21 @@
 			<define name="BMP_I2C_DEV" value="i2c2"/>
 			<define name="USE_I2C2"/>
 		</load>-->
-		<!--<load name="servo_switch.xml">
+		<load name="servo_switch.xml">
 			<define name="SERVO_SWITCH_ON_VALUE"	value="2000"/>
 			<define name="SERVO_SWITCH_OFF_VALUE"	value="1000"/>
-			<define name="SERVO_SWITCH_SERVO"		value="GEAR"/>
-		</load>-->
+			<define name="SERVO_SWITCH_SERVO"		value="SWITCH0"/>
+		</load>
 	</modules>
 
 	<servos>
-		<servo name="MOTOR"		no="0" min="1000" neutral="1000" max="2000"/>
-		<servo name="ELEVATOR"	no="1" min="1000" neutral="1500" max="2000"/>
-		<servo name="VECTOR1"	no="2" min="2000" neutral="1500" max="1000"/> 
-		<servo name="VECTOR2"	no="3" min="2000" neutral="1500" max="1000"/> 
-		<servo name="VECTOR3"	no="4" min="1000" neutral="1500" max="2000"/> 
-		<servo name="AILERON"	no="5" min="1000" neutral="1500" max="2000"/>
-		<!--<servo name="GEAR"		no="5" min="1000" neutral="1000" max="2000"/> --><!-- Landing Gear Control Signal -->
+		<servo name="SWITCH0"	no="0"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH1"	no="1"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH2"	no="2"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH3"	no="3"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH4"	no="4"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH5"	no="5"	min="1000"	neutral="1500"	max="2000"/>
+		<servo name="SWITCH6"	no="6"	min="1000"	neutral="1500"	max="2000"/>
 	</servos>
 
 	<commands>
@@ -73,40 +72,27 @@
 		<axis name="ROLL"		failsafe_value="0"/>
 		<axis name="PITCH"		failsafe_value="0"/>
 		<axis name="YAW"		failsafe_value="0"/>
-		<axis name="GEAR"		failsafe_value="0"/>
-		<axis name="AUX1"		failsafe_value="0"/>
+		<!--<axis name="GEAR"		failsafe_value="0"/>
+		<axis name="AUX1"		failsafe_value="0"/>-->
+		<axis name="SWITCH0"	failsafe_value="0"/>
 	</commands>
 
-	<rc_commands>
-		<set command="THROTTLE"	value="@THROTTLE"/>
-		<set command="ROLL"		value="@ROLL"/>
-		<set command="PITCH"	value="@PITCH"/>
-		<set command="YAW"		value="@YAW"/>
-		<set command="GEAR"		value="@GEAR"/>
-		<set command="AUX1"		value="@AUX1"/>
-	</rc_commands>
-	
-	<auto_rc_commands>
-		<set command="GEAR"		value="@GEAR"/>
-		<set command="AUX1"		value="@AUX1"/>
-	</auto_rc_commands>
-
-	<section name="MIXER">
-		<define name="AILEVON_AILERON_RATE" value="1"/>
-		<define name="AILEVON_ELEVATOR_RATE" value="1"/>
-	</section>
-
 	<command_laws>
-		<set servo="MOTOR"	value="@THROTTLE"/>
-		<let var="aileron" value="@ROLL * AILEVON_AILERON_RATE"/>
-    	<let var="elevator" value="@PITCH * AILEVON_ELEVATOR_RATE"/>		
-		<set servo="VECTOR3"	value="@YAW"/>
-		<set servo="VECTOR2"	value="$aileron + $elevator"/>
-        <set servo="VECTOR1"	value="$aileron - $elevator"/>
-        <set servo="AILERON"	value="@ROLL"/>
-        <set servo="ELEVATOR"	value="@PITCH"/>
-		<!--<set servo="GEAR"		value="@GEAR"/>-->
+		<set servo="SWITCH0"	value="@SWITCH0"/>
+		<set servo="SWITCH1"	value="@THROTTLE"/>
+		<set servo="SWITCH2"	value="@SWITCH0"/>
+		<set servo="SWITCH3"	value="@SWITCH0"/>
+		<set servo="SWITCH4"	value="@SWITCH0"/>
+		<set servo="SWITCH5"	value="@SWITCH0"/>
+		<set servo="SWITCH6"	value="@SWITCH0"/>
 	</command_laws>
+	
+	<rc_commands>
+		<set command="THROTTLE"		value="@THROTTLE"/>
+		<set command="ROLL"			value="@ROLL"/>
+		<set command="PITCH"		value="@PITCH"/>
+		<set command="YAW"			value="@YAW"/>
+	</rc_commands>
 
 	<section name="IMU" prefix="IMU_">
 		<define name="BODY_TO_IMU_PHI"		value="180.0" unit="deg"/>
@@ -178,7 +164,7 @@
 	</section>
 
 	<section name="HORIZONTAL CONTROL" prefix="H_CTL_">
-		<define name="RATE_LOOP"	value="1" />
+		<!--<define name="RATE_LOOP"	value="1" />-->
 		<define name="COURSE_PGAIN" value="1.0"/>
 		<define name="COURSE_DGAIN" value="0.3"/>
 
@@ -205,14 +191,14 @@
 		<define name="ROLL_RATE_DGAIN"				value="1.5"/><!--1.5/-->
 		<define name="ROLL_RATE_MAX_SETPOINT"		value="9600"/>
 		<define name="ROLL_RATE_MODE_DEFAULT"		value="0"/>
-		<define name="ROLL_RATE_LOOP_ONLY"			value="1"/>
+		<!--<define name="ROLL_RATE_LOOP_ONLY"			value="1"/>-->
 		<define name="ROLL_RATE_SETPOINT_PGAIN"		value="0"/>
 		<define name="ROLL_RATE_SUM_NB_SAMPLES"		value="4"/>
 		
 		<!-- Experimental YAW section -->
 		<define name="HI_THROTTLE_YAW_PGAIN"	value="3000."/>
 		<define name="LO_THROTTLE_YAW_PGAIN"	value="6000."/>
-		<define name="USE_YAW_LOOP"				value="1"/>
+		<!--<define name="USE_YAW_LOOP"				value="1"/>-->
 		<define name="YAW_PGAIN"				value="12000."/>
 		<define name="YAW_IGAIN"				value="1."/>
 		<define name="YAW_DGAIN"				value="1.5"/>
